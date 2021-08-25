@@ -16,10 +16,21 @@ contract Token is ERC20 {
     minter = msg.sender;
   }
 
-  //Add pass minter role function
+  event MinterChanged(address indexed from, address to);
+
+  //Add ability to change who is the minter
+  function passMinterRole(address dBank) public returns(bool){
+    require(msg.sender == minter, "Error, only owner can call this function");
+    minter = dBank;
+
+    emit MinterChanged(msg.sender, dBank);
+    return true;
+  }
+
 
   function mint(address account, uint256 amount) public {
     //check if msg.sender have minter role
+    require(msg.sender == minter, 'You do not have authority to mint new DCB');
 		_mint(account, amount);
 	}
 }
