@@ -6,7 +6,7 @@ module.exports = async function(deployer) {
 	await deployer.deploy(Token)
 
 	//assign token into variable to get it's address
-	
+	let token = Token.address
 	//pass token address for dBank contract(for future minting)
 
 	//assign dBank contract into variable to get it's address
