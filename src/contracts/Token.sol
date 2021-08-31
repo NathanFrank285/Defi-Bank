@@ -11,7 +11,7 @@ contract Token is ERC20 {
   //add minter changed event
 
 
-  constructor() public payable ERC20("Decentralized Bank Currency", "DCB") {
+  constructor() public payable ERC20("Decentralized Bank Currency", "DBC") {
     //asign initial minter
     minter = msg.sender;
   }
@@ -30,7 +30,7 @@ contract Token is ERC20 {
 
   function mint(address account, uint256 amount) public {
     //check if msg.sender have minter role
-    require(msg.sender == minter, 'You do not have authority to mint new DCB');
+    require(msg.sender == minter, 'You do not have authority to mint new DBC');
 		_mint(account, amount);
 	}
 }
