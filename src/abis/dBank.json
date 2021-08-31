@@ -17,7 +17,8 @@
       "name": "deposit",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function"
+      "type": "function",
+      "payable": true
     },
     {
       "inputs": [],
@@ -31,7 +32,8 @@
       "name": "borrow",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function"
+      "type": "function",
+      "payable": true
     },
     {
       "inputs": [],
@@ -832,9 +834,17 @@
     "name": "solc",
     "version": "0.7.6+commit.7338295f.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0x6ed1d3c16F731b3f569Fb6130a61Cfbf9aC8A687",
+      "transactionHash": "0x5f2151222f59a46f83fb08348c2eef2857c82f0379d63540ee2ac3ac233c5c74"
+    }
+  },
   "schemaVersion": "3.4.2",
-  "updatedAt": "2021-08-31T22:29:37.572Z",
+  "updatedAt": "2021-08-31T22:29:55.465Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},
