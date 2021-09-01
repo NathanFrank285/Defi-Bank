@@ -22,12 +22,19 @@ class App extends Component {
       const netId = await web3.eth.net.getId()
       //check if account is detected, then load balance&setStates, elsepush alert
       const accounts = await web3.eth.getAccounts()
+
       if (typeof accounts[0] !== 'undefined'){
         const balance = await web3.eth.getBalance(accounts[0])
         this.setState({account: accounts[0], balance: balance, web3: web3})
       } else {
         window.alert('Please install Metamask')
       }
+      // The below creates a Javascript version of the token and the dbank
+
+      const token = new web3.eth.Contract(Token.abi, Token.networks[netId].address);
+      const dbank = new web3.eth.Contract(dBank.abi, dBank.networks[netId].address)
+      const dBankAddress = dBank.networks[netId].address
+      this.setState({token: token, dbank: dbank, dBankAddress: dBankAddress})
 
 
     } else {
