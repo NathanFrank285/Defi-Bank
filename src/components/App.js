@@ -35,7 +35,15 @@ class App extends Component {
         const token = new web3.eth.Contract(Token.abi, Token.networks[netId].address);
         const dbank = new web3.eth.Contract(dBank.abi, dBank.networks[netId].address)
         const dBankAddress = dBank.networks[netId].address
-        this.setState({token: token, dbank: dbank, dBankAddress: dBankAddress})
+        const userBalance = await token.methods.balanceOf(this.state.account).call()
+        const dbcBalance = web3.utils.fromWei(userBalance)
+        console.log(dbcBalance)
+        this.setState({
+          token: token,
+          dbank: dbank,
+          dBankAddress: dBankAddress,
+          balance: dbcBalance,
+        });
       } catch (e) {
         console.log('Error', e)
         window.alert('Contract not deployed to the current network')
@@ -109,6 +117,7 @@ class App extends Component {
           <br></br>
           <h1>Welcome to dBank</h1>
           <h2>{this.state.account}</h2>
+          <h3>DBC Balance: {this.state.balance}</h3>
           <br></br>
           <div className="row">
             <main role="main" className="col-lg-12 d-flex text-center">
@@ -144,7 +153,7 @@ class App extends Component {
                           />
                         </div>
                         <button type="submit" className="btn btn-primary">
-                          DEPOSI
+                          DEPOSIT
                         </button>
                       </form>
                     </div>
