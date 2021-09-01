@@ -15,12 +15,26 @@ class App extends Component {
   }
 
   async loadBlockchainData(dispatch) {
-
     //check if MetaMask exists
-
+    if (typeof window.ethereum !== 'undefined') {
       //assign to values to variables: web3, netId, accounts
-
+      const web3 = new Web3(window.ethereum)
+      const netId = await web3.eth.net.getId()
       //check if account is detected, then load balance&setStates, elsepush alert
+      const accounts = await web3.eth.getAccounts()
+      if (typeof accounts[0] !== 'undefined'){
+        const balance = await web3.eth.getBalance(accounts[0])
+        this.setState({account: accounts[0], balance: balance, web3: web3})
+      } else {
+        window.alert('Please install Metamask')
+      }
+
+
+    } else {
+      window.alert('Please install Metamask')
+    }
+
+
 
       //in try block load contracts
 
