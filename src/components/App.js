@@ -30,11 +30,16 @@ class App extends Component {
         window.alert('Please install Metamask')
       }
       // The below creates a Javascript version of the token and the dbank
+      try {
 
-      const token = new web3.eth.Contract(Token.abi, Token.networks[netId].address);
-      const dbank = new web3.eth.Contract(dBank.abi, dBank.networks[netId].address)
-      const dBankAddress = dBank.networks[netId].address
-      this.setState({token: token, dbank: dbank, dBankAddress: dBankAddress})
+        const token = new web3.eth.Contract(Token.abi, Token.networks[netId].address);
+        const dbank = new web3.eth.Contract(dBank.abi, dBank.networks[netId].address)
+        const dBankAddress = dBank.networks[netId].address
+        this.setState({token: token, dbank: dbank, dBankAddress: dBankAddress})
+      } catch (e) {
+        console.log('Error', e)
+        window.alert('Contract not deployed to the current network')
+      }
 
 
     } else {
@@ -50,10 +55,25 @@ class App extends Component {
 
   async deposit(amount) {
     //check if this.state.dbank is ok
-      //in try block call dBank deposit();
+    if(this.state.dbank !== 'undefined'){
+      try {
+        await this.state.dbank.methods.deposit().send({value: amount.toString(), from: this.state.account})
+      } catch (e) {
+        console.log('Error, deposit: ', e)
+      }
+    }
+    //in try block call dBank deposit();
   }
 
   async withdraw(e) {
+    e.preventDefault()
+    if(this.state.dbank !== 'undefined'){
+      try {
+        await this.state.dbank.methods.withdraw().send({from: this.state.account})
+      } catch (e) {
+        console.log('Error, deposit: ', e)
+      }
+    }
     //prevent button from default click
     //check if this.state.dbank is ok
     //in try block call dBank withdraw();
@@ -73,7 +93,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className='text-monospace'>
+      <div className="text-monospace">
         <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
           <a
             className="navbar-brand col-sm-3 col-md-2 mr-0"
@@ -81,22 +101,68 @@ class App extends Component {
             target="_blank"
             rel="noopener noreferrer"
           >
-        <img src={dbank} className="App-logo" alt="logo" height="32"/>
-          <b>dBank</b>
-        </a>
+            <img src={dbank} className="App-logo" alt="logo" height="32" />
+            <b>dBank</b>
+          </a>
         </nav>
         <div className="container-fluid mt-5 text-center">
-        <br></br>
-          <h1>{/*add welcome msg*/}</h1>
-          <h2>{/*add user address*/}</h2>
+          <br></br>
+          <h1>Welcome to dBank</h1>
+          <h2>{this.state.account}</h2>
           <br></br>
           <div className="row">
             <main role="main" className="col-lg-12 d-flex text-center">
               <div className="content mr-auto ml-auto">
-              <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
-                {/*add Tab deposit*/}
-                {/*add Tab withdraw*/}
-              </Tabs>
+                <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
+                  <Tab eventKey="deposit" title="Deposit">
+                    <div>
+                      <br></br>
+                      How much do you want to deposit?
+                      <br></br>
+                      min. amount is 0.01 ETH
+                      <br></br>1 deposit is possible at a time
+                      <br></br>
+                      <form onSubmit={(e) => {
+                        e.preventDefault()
+                        let amount = this.depositAmount.value
+                        console.log(amount)
+                        amount = Web3.utils.toWei(amount, 'ether');
+                        this.deposit(amount)
+                      }}>
+                        <div className="form-group mr-sm-2">
+                          <br></br>
+                          <input
+                            id="depositAmount"
+                            step="0.01"
+                            type='number'
+                            min="0"
+                            className="form-control form-control-md"
+                            placeholder="amount..."
+                            required
+                            ref={(input)=>{this.depositAmount = input}}
+
+                          />
+                        </div>
+                        <button type="submit" className="btn btn-primary">
+                          DEPOSI
+                        </button>
+                      </form>
+                    </div>
+                  </Tab>
+                  <Tab eventKey="withdraw" title="Withdrawal">
+                    <div>
+                      <br></br>
+                      Do you want to withdraw and take interest?
+                      <br></br>
+                      <br></br>
+                      <div>
+                        <button type='submit' className='btn btn-primary' onClick={(e)=>this.withdraw(e)}>WITHDRAW</button>
+                      </div>
+
+                    </div>
+                  </Tab>
+
+                </Tabs>
               </div>
             </main>
           </div>
